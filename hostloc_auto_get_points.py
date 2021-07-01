@@ -4,10 +4,14 @@ import random
 import re
 import textwrap
 import requests
+import telegram
 
-from pyaes import AESModeOfOperationCBC
+# from pyaes import AESModeOfOperationCBC
 from requests import Session as req_Session
 
+notes = ''
+tg_token = ''  # 请输入tgbot的tokan，没有可留空
+tg_id = ''  # 请输入tg号的id，没有可留空'
 
 # 随机生成用户空间链接
 def randomly_gen_uspace_url() -> list:
@@ -125,6 +129,7 @@ def check_login_status(s: req_Session, number_c: int) -> bool:
 
 # 抓取并打印输出帐户当前积分
 def print_current_points(s: req_Session):
+    global notes
     test_url = "https://hostloc.com/forum.php"
     res = s.get(test_url)
     res.raise_for_status()
@@ -133,8 +138,10 @@ def print_current_points(s: req_Session):
 
     if len(points) != 0:  # 确保正则匹配到了内容，防止出现数组索引越界的情况
         print("帐户当前积分：" + points[0])
+        notes += '\n账户当前积分为' + points[0]
     else:
         print("无法获取帐户积分，可能页面存在错误或者未登录！")
+        notes += "\n无法获取帐户积分，可能页面存在错误或者未登录！"
     time.sleep(5)
 
 
@@ -159,6 +166,12 @@ def get_points(s: req_Session, number_c: int):
         print("请检查你的帐户是否正确！")
 
 
+def tgbot(tg_token, tg_id):
+    if tg_id != '' and tg_token != '':
+        bot = telegram.Bot(tg_token)
+        bot.send_message(chat_id=tg_id, text='🎉Hostloc自动签到通知🎉：\n\n' + notes)
+
+
 # 打印输出当前ip地址
 def print_my_ip():
     api_url = "https://api.ipify.org/"
@@ -172,12 +185,11 @@ def print_my_ip():
 
 
 if __name__ == "__main__":
-    username = "账户"
-    password = "密码"
+    username = "refrigerator"
+    password = "BhYtp6vz"
     # username = os.environ["HOSTLOC_USERNAME"]
     # password = os.environ["HOSTLOC_PASSWORD"]
-    #账户和密码
-    
+    # 账户和密码
 
     # 分割用户名和密码为列表
     user_list = username.split(",")
@@ -204,3 +216,4 @@ if __name__ == "__main__":
             continue
 
         print("程序执行完毕，获取积分过程结束")
+        tgbot(tg_token, tg_id)
