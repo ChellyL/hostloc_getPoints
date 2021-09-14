@@ -4,6 +4,12 @@
 
 github action大规模失效，mjj平均一人10鸡，以下可以部署到自己的小鸡上
 
+## 新增tg推送
+请自己改一下脚本最前面的推送相关代码，填上你自己的频道token和id
+
+使用前建议 ```pip3 install -r requirements.txt```
+## 原文
+
 **第一步**下载下列代码
 https://github.com/Jox2018/hostloc_getPoints/blob/main/hostloc_auto_get_points.py
 
